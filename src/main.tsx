@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import BouquetsPage from './Bouquets';
-import BouquetDetailPage from './BouquetDetail';  // Import your BouquetDetail component
+import BouquetDetailPage from './BouquetDetail';
+import LoginPage from './components/LoginPage';
+import { Provider } from 'react-redux'; // Импортируйте Provider
+import { store } from './redux/store'; // Импортируйте ваш Redux store
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <h1>Это наша стартовая страница</h1>,
+    path: '/login',
+    element: <LoginPage />,
   },
   {
     path: '/RIP/',
@@ -26,6 +29,8 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <hr />
-    <RouterProvider router={router} />
+    <Provider store={store}> {/* Оберните ваше приложение в Provider */}
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 );
