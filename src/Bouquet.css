@@ -251,3 +251,11 @@
   .text-and-button p {
     margin-right: 10px; /* Add spacing between username and button */
   }
+  /* Add this CSS to your stylesheet or style section in your component */
+.basket-image {
+    margin-right: 10px;
+    width: 50px; /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+    /* Add any additional styling if required */
+  }
+  

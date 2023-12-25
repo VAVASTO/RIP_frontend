@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
 
       // Check for status 200 and redirect
       if (response.status === 200) {
-        navigate('/bouquetss/');
+        navigate('/bouquets/');
       } else {
         // Handle other status codes
         console.error('Login unsuccessful. Status:', response.status);
@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
   return (
     <div>
     <header>
-    <a href="/bouquetss">
+    <a href="/bouquets">
       <img src={logoImage} alt="Логотип" className="logo" />
     </a>
     <h1>Petal Provisions</h1>

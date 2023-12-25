@@ -23,7 +23,7 @@ const BouquetDetailPage: React.FC = () => {
   useEffect(() => {
     const fetchBouquetData = async () => {
       try {
-        const response = await fetch(`/bouquets/${id}`); // Assuming your API endpoint is like 'bouquets/id'
+        const response = await fetch(`http://localhost:8000/bouquets/${id}/`); // Assuming your API endpoint is like 'bouquets/id'
         const data = await response.json();
         setBouquetData(data); // Update state with fetched data
       } catch (error) {
@@ -42,7 +42,7 @@ const BouquetDetailPage: React.FC = () => {
   return (
     <div>
     <header>
-    <a href="/bouquetss">
+    <a href="/bouquets">
       <img src={logoImage} alt="Логотип" className="logo" />
     </a>
     <h1>Petal Provisions</h1>

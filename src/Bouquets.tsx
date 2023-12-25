@@ -7,6 +7,9 @@ import logoImage from './logo.png';
 import LogoutButton from './LogoutButton';
 import { RootState } from './redux/store';
 import { setUsername } from './redux/authSlice';
+import full_basket from './full_basket.png'
+import empty_basket from './empty_basket.png'
+import axios from 'axios'; // Import Axios
 
 interface Bouquet {
   bouquet_id: number;
@@ -27,6 +30,7 @@ const BouquetsPage: FC = () => {
   const [bouquets, setBouquets] = useState<Bouquet[]>([]);
   const [searchValue, setSearchValue] = useState(searchParam);
   const [priceValue, setPriceValue] = useState(priceParam);
+  const [headerMessage, setHeaderMessage] = useState<string>(''); // Initial state can be an empty string or any default value
 
   const isUserLoggedIn = document.cookie.includes('session_key');
   const username = useSelector((state: RootState) => state.auth.username);
@@ -35,16 +39,34 @@ const BouquetsPage: FC = () => {
     navigateTo('/login/');
   };
 
-  const handleSearchClick = () => {
-    navigateTo(`/bouquetss/?q=${searchValue}&price=${priceValue}`);
+  const handleLogoutClick = () => {
+    // Call fetchBouquets when LogoutButton is clicked
     fetchBouquets(searchValue, priceValue);
   };
 
+  const handleSearchClick = () => {
+    navigateTo(`http://localhost:8000/bouquets/?q=${searchValue}&price=${priceValue}`);
+    fetchBouquets(searchValue, priceValue);
+  };
+
+  const handleAddToCart = async (bouquetId: number) => {
+    try {
+      await axios.post(`http://localhost:8000/bouquets/${bouquetId}/1/add/`, {
+        quantity: 1,
+      });
+      fetchBouquets(searchValue, priceValue);
+    } catch (error) {
+    }
+  };
+
   const fetchBouquets = (searchText: string, price: string) => {
-    fetch(`/bouquets/?q=${searchText}&price=${price}`)
+    fetch(`http://localhost:8000/bouquets/?q=${searchText}&price=${price}`)
       .then((response) => response.json())
       .then((data) => {
-        setBouquets(data);
+        setBouquets(data.bouquets);
+        const draftApplicationId = data.draft_application_id;
+        const newHeaderMessage = draftApplicationId === null ? 'null' : 'не null';
+        setHeaderMessage(newHeaderMessage);
       })
       .catch((error) => {
         console.error('Error fetching bouquets:', error);
@@ -79,12 +101,17 @@ const BouquetsPage: FC = () => {
   return (
     <div>
       <header>
-        <a href="/bouquetss">
+        <a href="/bouquets">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
         <h1>Petal Provisions</h1>
         {!isUserLoggedIn && (
           <div className="text-and-button">
+            <img
+              src={headerMessage === 'null' ? empty_basket : full_basket}
+              alt="Basket Image"
+              className="basket-image"
+            />
             <button className="btn btn-primary" onClick={handleLoginClick}>
               Войти
             </button>
@@ -92,8 +119,13 @@ const BouquetsPage: FC = () => {
         )}
         {isUserLoggedIn && (
           <div className="text-and-button">
+              <img
+              src={headerMessage === 'null' ? empty_basket : full_basket}
+              alt="Basket Image"
+              className="basket-image"
+            />
             <p>{username}</p>
-            <LogoutButton />
+            <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
           </div>
         )}
       </header>
@@ -139,9 +171,12 @@ const BouquetsPage: FC = () => {
                     <p className="card-text">{bouquet.description}</p>
                     <p className="card-text">Цена: {bouquet.price} рублей</p>
                     {/* Add more text elements here if needed */}
-                    <a href={`/bouquetss/${bouquet.bouquet_id}/`} className="btn btn-primary">
+                    <a href={`/bouquets/${bouquet.bouquet_id}/`} className="btn btn-primary">
                       Подробнее
                     </a>
+                    <button onClick={() => handleAddToCart(bouquet.bouquet_id)} className="btn btn-primary">
+                      В корзину
+                    </button>
                   </div>
                 </div>
               </div>

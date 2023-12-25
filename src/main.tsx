@@ -18,11 +18,11 @@ const router = createBrowserRouter([
     element: <RegistrationPage />,
   },
   {
-    path: '/bouquetss/',
+    path: '/bouquets/',
     element: <BouquetsPage />,
   },
   {
-    path: '/bouquetss/:id/',
+    path: '/bouquets/:id/',
     element: <BouquetDetailPage />,
   },
 ]);
