@@ -40,6 +40,13 @@ const BouquetDetailPage: React.FC = () => {
   }, [id]); // Dependency array ensures the effect runs whenever 'id' changes
 
   return (
+    <div>
+    <header>
+    <a href="/bouquetss">
+      <img src={logoImage} alt="Логотип" className="logo" />
+    </a>
+    <h1>Petal Provisions</h1>
+  </header>
     <div className="container">
       {
         <div className="row">
@@ -61,6 +68,7 @@ const BouquetDetailPage: React.FC = () => {
           </div>
         </div>
       }
+    </div>
     </div>
   );
 };

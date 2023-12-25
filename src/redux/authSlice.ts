@@ -5,21 +5,27 @@ import axios from 'axios';
 
 interface AuthState {
   authToken: string | null;
+  username: string | null;
 }
 
+const initialUsername = localStorage.getItem('username') || null;
+
 const initialState: AuthState = {
-  authToken: Cookies.get('authToken') || null,
+  authToken: Cookies.get('session_key') || null,
+  username: initialUsername,
 };
 
 export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
-    try {
-      // Отправляем запрос на сервер для выхода
-      await axios.get('http://localhost:8000/users/logout/');
-    } catch (error) {
-      console.error('Error during logout:', error);
-      // Возможно, вы захотите обработать ошибку здесь
-    }
-  });
+  try {
+    // Send a request to the server to log out
+    await axios.get('http://localhost:8000/users/logout/', {
+      withCredentials: true,
+    });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    // You might want to handle the error here
+  }
+});
 
 const authSlice = createSlice({
   name: 'auth',
@@ -27,23 +33,26 @@ const authSlice = createSlice({
   reducers: {
     setAuthToken: (state, action: PayloadAction<string>) => {
       state.authToken = action.payload;
-      Cookies.set('authToken', action.payload);
+      Cookies.set('session_key', action.payload);
+    },
+    setUsername: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
+      // Update local storage whenever the username changes
+      localStorage.setItem('username', action.payload);
     },
     clearAuthToken: (state) => {
       state.authToken = null;
-      Cookies.remove('authToken');
+      Cookies.remove('session_key');
     },
   },
   extraReducers: (builder) => {
-    // Добавляем обработчик для асинхронного экшена logoutUser
     builder.addCase(logoutUser.fulfilled, (state) => {
-      // Вызываем clearAuthToken, чтобы удалить токен из Redux и кук
       state.authToken = null;
-      Cookies.remove('authToken');
+      Cookies.remove('session_key');
     });
-    }
+  },
 });
 
-export const { setAuthToken, clearAuthToken } = authSlice.actions;
+export const { setAuthToken, setUsername, clearAuthToken } = authSlice.actions;
 
 export default authSlice.reducer;

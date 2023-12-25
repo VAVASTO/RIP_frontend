@@ -104,8 +104,6 @@
 
     /* Стили для кнопок */
     .btn {
-        width: 100px; /* Фиксированная ширина кнопки */
-        height: 20px; /* Фиксированная высота кнопки */
         padding: 10px;
         text-align: center;
         text-decoration: none;
@@ -175,4 +173,81 @@
   .breadcrumb-separator {
     margin: 0 10px; /* Add margin around the separator */
     color: #555; /* Separator color */
+  }
+
+  /* Добавленные стили для закруглённых углов */
+.rounded-input {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+
+  .centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Высота равна высоте видимой области окна браузера */
+  }
+  /* Добавлены стили для центрирования по горизонтали */
+.button-container {
+    justify-content: center;
+  }
+  
+  /* Добавлены стили для вертикальной формы и контейнера для ввода */
+.vertical-form {
+    display: flex;
+    flex-direction: column; /* Выстраиваем элементы вертикально */
+    align-items: center; /* Выравниваем элементы по горизонтали по центру */
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column; /* Оставляем для кнопок вертикальное расположение */
+  }
+  
+  /* Add this style to your existing CSS or create a new CSS file */
+.error-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f44336;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 9999; /* Set a high z-index value to ensure it's on top */
+  }
+  
+  .modal-content {
+    position: relative;
+  }
+  
+  .close {
+    position: absolute;
+    top: -30px;
+    right: -10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .centered-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .vertical-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text-and-button {
+    display: flex;
+    margin-left: auto;
+  }
+  .text-and-button p {
+    margin-right: 10px; /* Add spacing between username and button */
   }

@@ -3,21 +3,22 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import BouquetsPage from './Bouquets';
 import BouquetDetailPage from './BouquetDetail';
+import RegistrationPage from './components/Registration'
 import LoginPage from './components/LoginPage';
 import { Provider } from 'react-redux'; // Импортируйте Provider
 import { store } from './redux/store'; // Импортируйте ваш Redux store
 
 const router = createBrowserRouter([
   {
-    path: '/login',
+    path: '/login/',
     element: <LoginPage />,
   },
   {
-    path: '/RIP/',
-    element: <h1>Это наша страница с чем-то новеньким</h1>,
+    path: '/register/',
+    element: <RegistrationPage />,
   },
   {
-    path: '/bouquetss',
+    path: '/bouquetss/',
     element: <BouquetsPage />,
   },
   {
