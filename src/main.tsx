@@ -5,10 +5,21 @@ import BouquetsPage from './Bouquets';
 import BouquetDetailPage from './BouquetDetail';
 import RegistrationPage from './components/Registration'
 import LoginPage from './components/LoginPage';
+import ModeratorBouquetsPage from './Moderator_bouquets';
+import ModeratorBouquetsChangePage from './Moderator_bouquets_change';
+import ModeratorBouquetsNewPage from './Moderator_bouquets_new'
 import { Provider } from 'react-redux'; // Импортируйте Provider
 import { store } from './redux/store'; // Импортируйте ваш Redux store
 
 const router = createBrowserRouter([
+  {
+    path: '/moderator/bouquets/new/',
+    element: <ModeratorBouquetsNewPage />,
+  },
+  {
+    path: '/moderator/bouquets/',
+    element: <ModeratorBouquetsPage />,
+  },
   {
     path: '/login/',
     element: <LoginPage />,
@@ -24,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: '/bouquets/:id/',
     element: <BouquetDetailPage />,
+  },
+  {
+    path: '/moderator/bouquets/change/:id/',
+    element: <ModeratorBouquetsChangePage />,
   },
 ]);
 
