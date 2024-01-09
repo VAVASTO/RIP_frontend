@@ -54,6 +54,13 @@ const BouquetDetailPage: React.FC = () => {
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [editedQuantities, setEditedQuantities] = useState<{ [key: number]: number }>({});
 
+  const [editedClientInfo, setEditedClientInfo] = useState({
+    client_name: orderData?.client_name || '',
+    client_phone: orderData?.client_phone || '',
+    client_address: orderData?.client_address || '',
+    delivery_date: orderData?.delivery_date || '',
+  });
+
   const breadcrumbsItems = [
     { label: 'Все букеты', link: '/bouquetss' },
     { label: 'Подробнее', link: '' }
@@ -70,7 +77,18 @@ const BouquetDetailPage: React.FC = () => {
           orderData.bouquet_details.forEach(detail => {
             initialQuantities[detail.bouquet.bouquet_id] = detail.quantity;
           });
-          setEditedQuantities(initialQuantities);
+          setEditedQuantities(initialQuantities)
+          
+          const formattedDeliveryDate = orderData.delivery_date
+        ? new Date(orderData.delivery_date).toISOString().split('T')[0]
+        : '';
+
+          setEditedClientInfo({
+            client_name: orderData.client_name,
+            client_phone: orderData.client_phone,
+            client_address: orderData.client_address,
+            delivery_date: formattedDeliveryDate,
+          });
         } catch (error) {
           console.error('Ошибка при получении данных о заказе:', error);
         }
@@ -85,7 +103,7 @@ const BouquetDetailPage: React.FC = () => {
     };
   }, [id]);
 
-  const handleSaveChanges = async (bouquetId: number) => {
+  const handleSaveChangesBouquets = async (bouquetId: number) => {
     try {
       const newQuantity = editedQuantities[bouquetId];
       console.log('Saved changes. Bouquet ID:', bouquetId, 'New Quantity:', newQuantity);
@@ -99,6 +117,52 @@ const BouquetDetailPage: React.FC = () => {
       console.error('Error updating quantity:', error);
     }
   };
+
+  
+  const handleSaveChanges = async () => {
+    try {
+      // Make a PUT request using Axios
+      await axios.put(`http://localhost:8000/applications/update_service_application/`, {
+        client_name: editedClientInfo.client_name,
+        client_phone: editedClientInfo.client_phone,
+        client_address: editedClientInfo.client_address,
+        delivery_date: editedClientInfo.delivery_date,
+      });
+
+      // Optionally, you can refetch the order data to update the displayed information
+      fetchOrderData();
+    } catch (error) {
+      console.error('Error updating client information:', error);
+    }
+  };
+
+  const handleConfirmOrder = async () => {
+    try {
+        // Make a PUT request using Axios
+        await axios.put(`http://localhost:8000/applications/${id}/change_status_manager/`, {
+            application_status: "formed",
+        });
+  
+        // Optionally, you can refetch the order data to update the displayed information
+        fetchOrderData();
+      } catch (error) {
+        console.error('Error updating client information:', error);
+      }
+    };
+
+    const handleDeleteOrder = async () => {
+        try {
+            // Make a PUT request using Axios
+            await axios.put(`http://localhost:8000/applications/${id}/change_status_manager/`, {
+                application_status: "deleted",
+            });
+      
+            // Optionally, you can refetch the order data to update the displayed information
+            fetchOrderData();
+          } catch (error) {
+            console.error('Error updating client information:', error);
+          }
+        };
 
   const handleDeleteBouquet = async (bouquetId: number) => {
     try {
@@ -124,33 +188,78 @@ const BouquetDetailPage: React.FC = () => {
           <div className="col">
             {orderData && (
               <div className="order-details">
-                <h2>Информация о заказе</h2>
-                <div className="status-info">
-                  <p>
-                    <b>Статус заказа:</b> {translateStatus(orderData.status) || 'Не указан'}
-                  </p>
-                </div>
-                <div className="client-info">
-                  <p>
-                    <b>Имя клиента:</b> {orderData.client_name || 'Не указано'} | 
-                    <b> Телефон клиента:</b> {orderData.client_phone || 'Не указано'} | 
-                    <b> Адрес клиента:</b> {orderData.client_address || 'Не указано'}
-                  </p>
-                </div>
-                <div className="packer-info">
-                  <p>
-                    <b>Имя модератора:</b> {orderData.packer?.name || 'Не указано'} | 
-                    <b> Телефон модератора:</b> {orderData.packer?.phone || 'Не указано'} | 
-                    <b> Email модератора:</b> {orderData.packer?.email || 'Не указано'}
-                  </p>
-                </div>
-                <div className="courier-info">
-                  <p>
-                    <b>Имя курьера:</b> {orderData.courier?.name || 'Не указано'} | 
-                    <b> Телефон курьера:</b> {orderData.courier?.phone || 'Не указано'} | 
-                    <b> Email курьера:</b> {orderData.courier?.email || 'Не указано'}
-                  </p>
-                </div>
+                {orderData.status !== 'draft' ? (
+                  <>
+                    <h2>Информация о заказе</h2>
+                    <div className="status-info">
+                      <p>
+                        <b>Статус заказа:</b> {translateStatus(orderData.status) || 'Не указан'}
+                      </p>
+                    </div>
+                    <div className="client-info">
+                      <p>
+                        <b>Имя клиента:</b> {orderData.client_name || 'Не указано'} | 
+                        <b> Телефон клиента:</b> {orderData.client_phone || 'Не указано'} | 
+                        <b> Адрес клиента:</b> {orderData.client_address || 'Не указано'}
+                      </p>
+                    </div>
+                    <div className="packer-info">
+                      <p>
+                        <b>Имя модератора:</b> {orderData.packer?.name || 'Не указано'} | 
+                        <b> Телефон модератора:</b> {orderData.packer?.phone || 'Не указано'} | 
+                        <b> Email модератора:</b> {orderData.packer?.email || 'Не указано'}
+                      </p>
+                    </div>
+                    <div className="courier-info">
+                      <p>
+                        <b>Имя курьера:</b> {orderData.courier?.name || 'Не указано'} | 
+                        <b> Телефон курьера:</b> {orderData.courier?.phone || 'Не указано'} | 
+                        <b> Email курьера:</b> {orderData.courier?.email || 'Не указано'}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h2>Редактирование информации о заказе</h2>
+                    <div className="client-info">
+                      <label>
+                        Имя клиента:
+                        <input
+                          type="text"
+                          value={editedClientInfo.client_name}
+                          onChange={(e) => setEditedClientInfo({ ...editedClientInfo, client_name: e.target.value })}
+                        />
+                      </label>
+                      <label>
+                        Телефон клиента:
+                        <input
+                          type="text"
+                          value={editedClientInfo.client_phone}
+                          onChange={(e) => setEditedClientInfo({ ...editedClientInfo, client_phone: e.target.value })}
+                        />
+                      </label>
+                      <label>
+                        Адрес клиента:
+                        <input
+                          type="text"
+                          value={editedClientInfo.client_address}
+                          onChange={(e) => setEditedClientInfo({ ...editedClientInfo, client_address: e.target.value })}
+                        />
+                      </label>
+                      <label>
+                        Дата доставки:
+                        <input
+                          type="date" // Change to "date" if you want a date picker
+                          value={editedClientInfo.delivery_date}
+                          onChange={(e) => setEditedClientInfo({ ...editedClientInfo, delivery_date: e.target.value })}
+                        />
+                      </label>
+                      <button onClick={handleSaveChanges}>Сохранить изменения</button>
+                      <button onClick={handleConfirmOrder}>Подтвердить заказ</button>
+                      <button onClick={handleDeleteOrder}>Отменить заказ</button>
+                    </div>
+                  </>
+                )}
                 <h3>Информация о товарах</h3>
                 {orderData.bouquet_details.map((detail, index) => (
                   <div key={index} className="card">
@@ -179,7 +288,7 @@ const BouquetDetailPage: React.FC = () => {
                       </p>
                       {orderData.status === 'draft' && (
                         <div>
-                          <button onClick={() => handleSaveChanges(detail.bouquet.bouquet_id)}>Сохранить изменения</button>
+                          <button onClick={() => handleSaveChangesBouquets(detail.bouquet.bouquet_id)}>Сохранить изменения</button>
                           <button onClick={() => handleDeleteBouquet(detail.bouquet.bouquet_id)}>
                             <span role="img" aria-label="Delete">❌</span> Удалить товар
                           </button>
