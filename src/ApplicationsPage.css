@@ -2,3 +2,16 @@
 .table-divider {
     border-bottom: 1px solid #ddd; /* Adjust the color as needed */
   }
+
+  .date-filters{
+    margin-top: 20px;
+  }
+
+  #price-input{
+    width: 70px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+  }

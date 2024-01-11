@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { setAuthToken } from '../redux/authSlice';
 import '../Bouquet.css'; // Предполагается, что это ваш файл CSS
 import axios from 'axios';
+import logoImage from '../logo.png'; 
 
 const RegistrationPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,13 @@ const RegistrationPage: React.FC = () => {
   };
 
   return (
+    <div>
+    <header>
+    <a href="/bouquets">
+      <img src={logoImage} alt="Логотип" className="logo" />
+    </a>
+    <h1>Petal Provisions</h1>
+  </header>
     <div className="centered-container">
       <form className="vertical-form">
         <div className="button-container">
@@ -75,6 +83,7 @@ const RegistrationPage: React.FC = () => {
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 };

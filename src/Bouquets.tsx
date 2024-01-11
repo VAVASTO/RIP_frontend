@@ -28,16 +28,27 @@ const BouquetsPage: FC = () => {
   const priceParam = queryParams.get('price') || '';
 
   const [bouquets, setBouquets] = useState<Bouquet[]>([]);
+  const [draftApplicationId, setDraftApplicationId] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState(searchParam);
   const [priceValue, setPriceValue] = useState(priceParam);
   const [headerMessage, setHeaderMessage] = useState<string>(''); // Initial state can be an empty string or any default value
 
   const isUserLoggedIn = document.cookie.includes('session_key');
   const username = useSelector((state: RootState) => state.auth.username);
+  const user_role = useSelector((state: RootState) => state.auth.user_role);
 
   const handleLoginClick = () => {
     navigateTo('/login/');
   };
+
+  const handleApplicationstClick = () => {
+    navigateTo('/applications/');
+  };
+
+  const handleModeratorClick = () => {
+    navigateTo('/moderator/bouquets/');
+  };
+
 
   const handleLogoutClick = () => {
     // Call fetchBouquets when LogoutButton is clicked
@@ -64,6 +75,7 @@ const BouquetsPage: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         setBouquets(data.bouquets);
+        setDraftApplicationId(data.draft_application_id);
         const draftApplicationId = data.draft_application_id;
         const newHeaderMessage = draftApplicationId === null ? 'null' : 'не null';
         setHeaderMessage(newHeaderMessage);
@@ -107,23 +119,24 @@ const BouquetsPage: FC = () => {
         <h1>Petal Provisions</h1>
         {!isUserLoggedIn && (
           <div className="text-and-button">
-            <img
-              src={headerMessage === 'null' ? empty_basket : full_basket}
-              alt="Basket Image"
-              className="basket-image"
-            />
             <button className="btn btn-primary" onClick={handleLoginClick}>
               Войти
             </button>
           </div>
         )}
+
+        {isUserLoggedIn && user_role === 'moderator' && (
+              <div className="text-and-button">
+                <button className="btn btn-primary" onClick={handleModeratorClick}>
+                  Редактирование букетов
+                </button>
+              </div>
+            )}
         {isUserLoggedIn && (
           <div className="text-and-button">
-              <img
-              src={headerMessage === 'null' ? empty_basket : full_basket}
-              alt="Basket Image"
-              className="basket-image"
-            />
+            <button className="btn btn-primary" onClick={handleApplicationstClick}>
+              Заявки
+            </button>
             <p>{username}</p>
             <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
           </div>
@@ -134,6 +147,16 @@ const BouquetsPage: FC = () => {
         <div className="container">
           <div className="row">
             <Breadcrumbs items={breadcrumbsItems} /> {/* Include Breadcrumbs component */}
+            {isUserLoggedIn && (  
+          <div className="basket-container">
+          <a href={draftApplicationId !== null ? `/applications/${draftApplicationId}/` : '#'} className="basket-container">
+            <img
+              src={headerMessage === 'null' ? empty_basket : full_basket}
+              alt="Basket Image"
+              className="basket-image"
+            />
+          </a>
+        </div>)}
             <div className="search-bar">
               <input
                 type="text"
@@ -174,9 +197,12 @@ const BouquetsPage: FC = () => {
                     <a href={`/bouquets/${bouquet.bouquet_id}/`} className="btn btn-primary">
                       Подробнее
                     </a>
+                    {isUserLoggedIn && (
                     <button onClick={() => handleAddToCart(bouquet.bouquet_id)} className="btn btn-primary">
                       В корзину
                     </button>
+                    
+                    )}
                   </div>
                 </div>
               </div>

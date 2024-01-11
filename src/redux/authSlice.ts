@@ -6,13 +6,16 @@ import axios from 'axios';
 interface AuthState {
   authToken: string | null;
   username: string | null;
+  user_role: string | null;
 }
 
 const initialUsername = localStorage.getItem('username') || null;
+const initialUser_role = localStorage.getItem('user_role') || null;
 
 const initialState: AuthState = {
   authToken: Cookies.get('session_key') || null,
   username: initialUsername,
+  user_role: initialUser_role
 };
 
 export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
@@ -40,6 +43,11 @@ const authSlice = createSlice({
       // Update local storage whenever the username changes
       localStorage.setItem('username', action.payload);
     },
+    setUser_role: (state, action: PayloadAction<string>) => {
+      state.user_role = action.payload;
+      // Update local storage whenever the username changes
+      localStorage.setItem('user_role', action.payload);
+    },
     clearAuthToken: (state) => {
       state.authToken = null;
       Cookies.remove('session_key');
@@ -53,6 +61,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAuthToken, setUsername, clearAuthToken } = authSlice.actions;
+export const { setAuthToken, setUsername, setUser_role, clearAuthToken } = authSlice.actions;
 
 export default authSlice.reducer;

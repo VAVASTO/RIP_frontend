@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';  // Import Axios library
 import Breadcrumbs from './Breadcrumbs';
+import './ApplicationsPage.css';
 import './BouquetDetail.css';
 import logoImage from './logo.png';
 
@@ -62,8 +63,8 @@ const BouquetDetailPage: React.FC = () => {
   });
 
   const breadcrumbsItems = [
-    { label: 'Все букеты', link: '/bouquetss' },
-    { label: 'Подробнее', link: '' }
+    { label: 'Все букеты', link: '/bouquets' },
+    { label: 'Заявка', link: '' }
   ];
 
     // Define fetchOrderData function
@@ -226,6 +227,7 @@ const BouquetDetailPage: React.FC = () => {
                         Имя клиента:
                         <input
                           type="text"
+                          id="price-input"
                           value={editedClientInfo.client_name}
                           onChange={(e) => setEditedClientInfo({ ...editedClientInfo, client_name: e.target.value })}
                         />
@@ -234,6 +236,7 @@ const BouquetDetailPage: React.FC = () => {
                         Телефон клиента:
                         <input
                           type="text"
+                          id="price-input"
                           value={editedClientInfo.client_phone}
                           onChange={(e) => setEditedClientInfo({ ...editedClientInfo, client_phone: e.target.value })}
                         />
@@ -242,6 +245,7 @@ const BouquetDetailPage: React.FC = () => {
                         Адрес клиента:
                         <input
                           type="text"
+                          id="price-input"
                           value={editedClientInfo.client_address}
                           onChange={(e) => setEditedClientInfo({ ...editedClientInfo, client_address: e.target.value })}
                         />
@@ -254,9 +258,9 @@ const BouquetDetailPage: React.FC = () => {
                           onChange={(e) => setEditedClientInfo({ ...editedClientInfo, delivery_date: e.target.value })}
                         />
                       </label>
-                      <button onClick={handleSaveChanges}>Сохранить изменения</button>
-                      <button onClick={handleConfirmOrder}>Подтвердить заказ</button>
-                      <button onClick={handleDeleteOrder}>Отменить заказ</button>
+                      <button className="btn btn-primary" onClick={handleSaveChanges}>Сохранить изменения</button>
+                      <button className="btn btn-primary" onClick={handleConfirmOrder}>Подтвердить заказ</button>
+                      <button className="btn btn-primary" onClick={handleDeleteOrder}>Отменить заказ</button>
                     </div>
                   </>
                 )}
@@ -275,6 +279,7 @@ const BouquetDetailPage: React.FC = () => {
                         {orderData.status === 'draft' ? (
                           <input
                             type="number"
+                            id="price-input"
                             value={editedQuantities[detail.bouquet.bouquet_id] || ''}
                             onChange={(e) => {
                               const newQuantities = { ...editedQuantities };
@@ -288,8 +293,8 @@ const BouquetDetailPage: React.FC = () => {
                       </p>
                       {orderData.status === 'draft' && (
                         <div>
-                          <button onClick={() => handleSaveChangesBouquets(detail.bouquet.bouquet_id)}>Сохранить изменения</button>
-                          <button onClick={() => handleDeleteBouquet(detail.bouquet.bouquet_id)}>
+                          <button className="btn btn-primary" onClick={() => handleSaveChangesBouquets(detail.bouquet.bouquet_id)}>Сохранить изменения</button>
+                          <button className="btn btn-primary" onClick={() => handleDeleteBouquet(detail.bouquet.bouquet_id)}>
                             <span role="img" aria-label="Delete">❌</span> Удалить товар
                           </button>
                         </div>

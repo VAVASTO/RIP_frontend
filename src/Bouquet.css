@@ -253,7 +253,7 @@
   }
   /* Add this CSS to your stylesheet or style section in your component */
 .basket-image {
-    margin-right: 10px;
+    margin-right: 1px;
     width: 50px; /* Adjust the width as needed */
     height: 50px; /* Adjust the height as needed */
     /* Add any additional styling if required */

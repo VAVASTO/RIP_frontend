@@ -55,9 +55,13 @@ const ApplicationsPage: FC = () => {
   const navigateTo = useNavigate();
   const isUserLoggedIn = document.cookie.includes('session_key');
   const username = useSelector((state: RootState) => state.auth.username);
+  const user_role = useSelector((state: RootState) => state.auth.user_role);
+  console.log("Hello")
+  console.log(user_role) 
 
   const [applications, setApplications] = useState<Application[]>([]);
 
+  
   const fetchApplications = async () => {
     try {
       const response = await axios.get('http://localhost:8000/applications/', { withCredentials: true });
