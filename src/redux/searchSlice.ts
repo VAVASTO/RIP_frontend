@@ -20,7 +20,7 @@ const searchSlice = createSlice({
   initialState,
   reducers: {
     setClientName: (state, action: PayloadAction<string>) => {
-      state.clientName = action.payload;
+        state.clientName = action.payload;
     },
     setStartDate: (state, action: PayloadAction<string>) => {
         state.startDate = action.payload;
@@ -34,6 +34,6 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setClientName } = searchSlice.actions;
+export const { setClientName, setStartDate } = searchSlice.actions;
 
 export default searchSlice.reducer;

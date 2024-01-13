@@ -25,7 +25,7 @@ const BouquetsPage: FC = () => {
 
   const [bouquets, setBouquets] = useState<Bouquet[]>([]);
   const [draftApplicationId, setDraftApplicationId] = useState<string | null>(null);
-  const [headerMessage, setHeaderMessage] = useState<string>(''); // Initial state can be an empty string or any default value
+  const [headerMessage, setHeaderMessage] = useState<string>('');
   const [localSearchValue, setLocalSearchValue] = useState<string>('');
   const [localPriceValue, setLocalPriceValue] = useState<string>('');
 

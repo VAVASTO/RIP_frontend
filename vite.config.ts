@@ -7,4 +7,7 @@ export default defineConfig({
     port: 3000,
    },
   plugins: [react()],
+  optimizeDeps: {
+    include: ['redux-thunk'], // Include redux-thunk in the optimization
+  },
 })

@@ -92,16 +92,14 @@ const ApplicationsPage: FC = () => {
   const user_role = useSelector((state: RootState) => state.auth.user_role);
 
   const [applications, setApplications] = useState<Application[]>([]);
-  const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [status, setStatus] = useState<string>('');
   const [clientName, setClientName] = useState<string>(''); // Step 1: Add a state variable for client name
   const [isSearchClicked, setIsSearchClicked] = useState(false);
 
   let custom_params = {};
-  const startDateFromRedux = useSelector((state: RootState) => state.search.startDate);
-
-  const handleSearch = () => {
+  
+  const handleSearch = async () => {
     // Filter applications based on client name on the frontend
     const filteredApplications = applications.filter((application) => {
       return true;
@@ -114,18 +112,25 @@ const ApplicationsPage: FC = () => {
     setApplications(filteredApplications);
     setIsSearchClicked(true);
   };
-
+  
+  const latestStartDateFromRedux = useSelector((state: RootState) => state.search.startDate);
   const fetchApplicationsAndSetInterval = async () => {
     try {
+      setIsSearchClicked(false);
+      
       custom_params = {
-        start_date: startDateFromRedux,
+        start_date: latestStartDateFromRedux,
         end_date: endDate,
         status: status,
       };
 
       const response = await axios.get('http://localhost:8000/applications/', {
         withCredentials: true,
-        params: custom_params,
+        params: {
+          start_date: localStartDate,
+          end_date: endDate,
+          status: status,
+        },
       });
       const data = response.data;
 
@@ -154,7 +159,7 @@ const ApplicationsPage: FC = () => {
 
     // Cleanup interval on component unmount
     return () => clearInterval(pollInterval);
-  }, [startDate, endDate, status, isSearchClicked]);
+  }, [endDate, status, isSearchClicked]);
 
   return (
     <div>
@@ -225,7 +230,7 @@ const ApplicationsPage: FC = () => {
             </div>
           </div>
           <div className="row">
-            <table className="table" style={{ marginTop: '20px' }}>
+            <table className="table" style={{ marginsearchBouquetsReducerTop: '20px' }}>
               <thead>
                 <tr>
                   <th scope="col">Менеджер</th>
