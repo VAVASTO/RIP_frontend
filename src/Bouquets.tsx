@@ -7,7 +7,6 @@ import './Bouquet.css';
 import logoImage from './logo.png';
 import LogoutButton from './LogoutButton';
 import { RootState } from './redux/store';
-import { setUsername } from './redux/authSlice';
 import full_basket from './full_basket.png'
 import empty_basket from './empty_basket.png'
 import axios from 'axios'; // Import Axios

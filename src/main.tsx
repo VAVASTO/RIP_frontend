@@ -14,7 +14,7 @@ import CartPage from './CartPage';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 
-console.error = () => {};
+//console.error = () => {};
 const router = createBrowserRouter([
   {
     path: '/moderator/bouquets/new/',

@@ -6,10 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import logoImage from './logo.png';
 import axios from 'axios';
 import LogoutButton from './LogoutButton';
-import { setCustomParams } from './redux/customParamsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './redux/store';
-import { ru } from 'date-fns/locale';
+import {setClientName, setStartDate, setEndDate, setStatus} from './redux/searchSlice';
 
 interface Application {
   application_id: number;
@@ -49,6 +48,7 @@ function translateStatus(status: string): string {
 }
 
 const ApplicationsPage: FC = () => {
+  const [localStartDate, setLocalStartDate] = useState<string>('');
   const dispatch = useDispatch();
   const customParams = useSelector((state) => state.customParams.customParams);
 
@@ -99,6 +99,7 @@ const ApplicationsPage: FC = () => {
   const [isSearchClicked, setIsSearchClicked] = useState(false);
 
   let custom_params = {};
+  const startDateFromRedux = useSelector((state: RootState) => state.search.startDate);
 
   const handleSearch = () => {
     // Filter applications based on client name on the frontend
@@ -109,7 +110,7 @@ const ApplicationsPage: FC = () => {
       }
       return application.client_name.toLowerCase().includes(clientName.toLowerCase());
     });
-
+    dispatch(setStartDate(localStartDate));
     setApplications(filteredApplications);
     setIsSearchClicked(true);
   };
@@ -117,7 +118,7 @@ const ApplicationsPage: FC = () => {
   const fetchApplicationsAndSetInterval = async () => {
     try {
       custom_params = {
-        start_date: startDate,
+        start_date: startDateFromRedux,
         end_date: endDate,
         status: status,
       };
@@ -126,7 +127,6 @@ const ApplicationsPage: FC = () => {
         withCredentials: true,
         params: custom_params,
       });
-
       const data = response.data;
 
 
@@ -183,11 +183,11 @@ const ApplicationsPage: FC = () => {
             <div className="date-filters">
               <label htmlFor="startDate">Дата начала:</label>
               <input
-        type="date"
-        id="startDate"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-      />  
+                type="date"
+                id="startDate"
+                value={localStartDate}
+                onChange={(e) => setLocalStartDate(e.target.value)}
+              />  
 
               <label htmlFor="endDate">Дата конца:</label>
               <input
