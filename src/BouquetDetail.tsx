@@ -15,7 +15,7 @@ const BouquetDetailPage: React.FC = () => {
   });
 
   const breadcrumbsItems = [
-    { label: 'Все букеты', link: '/bouquetss' },
+    { label: 'Все букеты', link: '/bouquets' },
     { label: 'Подробнее', link: '' } 
   ];
 
@@ -31,7 +31,7 @@ const BouquetDetailPage: React.FC = () => {
       }
     };
 
-    fetchBouquetData(); // Call the fetchBouquetData function when the component mounts
+    fetchBouquetData();
 
     // Cleanup the effect when the component is unmounted (optional)
     return () => {

@@ -1,19 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import BouquetsPage from './Bouquets';
 import BouquetDetailPage from './BouquetDetail';
-import RegistrationPage from './components/Registration'
+import RegistrationPage from './components/Registration';
 import LoginPage from './components/LoginPage';
 import ModeratorBouquetsPage from './Moderator_bouquets';
 import ModeratorBouquetsChangePage from './Moderator_bouquets_change';
-import ModeratorBouquetsNewPage from './Moderator_bouquets_new'
-import ApplicationDetailPage from './Application_detail'
-import ApplicationsPage from './ApplicationsPage'
-import CartPage from './CartPage'
-import { Provider } from 'react-redux'; // Импортируйте Provider
-import { store } from './redux/store'; // Импортируйте ваш Redux store
+import ModeratorBouquetsNewPage from './Moderator_bouquets_new';
+import ApplicationDetailPage from './Application_detail';
+import ApplicationsPage from './ApplicationsPage';
+import CartPage from './CartPage';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
+console.error = () => {};
 const router = createBrowserRouter([
   {
     path: '/moderator/bouquets/new/',
@@ -57,11 +58,12 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.render(
   <React.StrictMode>
     <hr />
-    <Provider store={store}> {/* Оберните ваше приложение в Provider */}
+    <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>,
+  document.getElementById('root')
 );

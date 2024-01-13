@@ -1,7 +1,6 @@
 // ModeratorBouquetsPage.tsx
 import React, { FC, useState, useEffect } from 'react';
 import './ApplicationsPage.css';
-import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import logoImage from './logo.png';
 import axios from 'axios';
@@ -131,14 +130,11 @@ const ApplicationsPage: FC = () => {
 
 
       const filteredApplications = data.filter((data) => {
-        return true
         if (!data.client_name) {
           return false;
         }
         return data.client_name.toLowerCase().includes(clientName.toLowerCase());
       });
-
-
 
       setApplications(filteredApplications);
     } catch (error) {
@@ -187,6 +183,7 @@ const ApplicationsPage: FC = () => {
         id="startDate"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
+        locale={ru}
       />  
 
               <label htmlFor="endDate">Дата конца:</label>
@@ -195,6 +192,7 @@ const ApplicationsPage: FC = () => {
                 id="endDate"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
+                locale={ru}
               />
 
               <label htmlFor="status">Статус:</label>
@@ -247,12 +245,8 @@ const ApplicationsPage: FC = () => {
                       <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.packer?.name || 'Неизвестно'}</td>
                       <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.client_name}</td>
                       <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.client_phone}</td>
-                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      {format(new Date(application.receiving_date), 'dd.MM.yyyy HH:mm')}
-                    </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                    {format(new Date(application.delivery_date), 'dd.MM.yyyy')}
-                    </td>
+                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.receiving_date}</td>
+                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.delivery_date}</td>
                       <td style={{ border: '1px solid #ddd', padding: '8px' }}>{translateStatus(application.status)}</td>
                       {user_role === 'moderator' && (
                         <td style={{ border: '1px solid #ddd', padding: '8px' }}>
