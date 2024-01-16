@@ -1,12 +1,13 @@
 import ReactDOM from 'react-dom';
-import {HashRouter, Route, Routes} from "react-router-dom";
+import { HashRouter, Route, Routes, Navigate } from "react-router-dom";
 import BouquetsPage from './Bouquets';
-import BouquetDetailPage from './BouquetDetail';  // Import your BouquetDetail component
+import BouquetDetailPage from './BouquetDetail';  
 
 ReactDOM.render(
   <HashRouter>
     <Routes>
-      <Route path="/bouquetss/" element={<BouquetsPage />}/>
+      <Route path="/" element={<Navigate to="/bouquetss/" />} />
+      <Route path="/bouquetss/" element={<BouquetsPage />} />
       <Route path="/bouquetss/:id/" element={<BouquetDetailPage />} />
     </Routes>
   </HashRouter>,
