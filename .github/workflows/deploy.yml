@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - react
+      - spa
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/react'
+    if: github.ref == 'refs/heads/spa'
 
     steps:
       - name: Download artifact
