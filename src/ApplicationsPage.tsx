@@ -47,10 +47,29 @@ function translateStatus(status: string): string {
   }
 }
 
+function translateStatusReverse(status: string): string {
+  switch (status) {
+    case 'удалено':
+      return 'deleted';
+    case 'завершено':
+      return 'completed';
+    case 'сформировано':
+      return 'formed';
+    case 'доставляется':
+      return 'delivering';
+    case 'отклонено':
+      return 'rejected';
+    default:
+      return '';
+  }
+}
+
 const ApplicationsPage: FC = () => {
   const [localStartDate, setLocalStartDate] = useState<string>('');
+  const [localEndDate, setLocalEndDate] = useState<string>('');
+  const [localStatus, setLocalStatus] = useState<string>('');
+  const [localClientName, setLocalClientName] = useState<string>('');
   const dispatch = useDispatch();
-  const customParams = useSelector((state) => state.customParams.customParams);
 
   const handleLoginClick = () => {
     navigateTo('/login/');
@@ -92,13 +111,10 @@ const ApplicationsPage: FC = () => {
   const user_role = useSelector((state: RootState) => state.auth.user_role);
 
   const [applications, setApplications] = useState<Application[]>([]);
-  const [endDate, setEndDate] = useState<string>('');
-  const [status, setStatus] = useState<string>('');
-  const [clientName, setClientName] = useState<string>(''); // Step 1: Add a state variable for client name
   const [isSearchClicked, setIsSearchClicked] = useState(false);
 
   let custom_params = {};
-  
+
   const handleSearch = async () => {
     // Filter applications based on client name on the frontend
     const filteredApplications = applications.filter((application) => {
@@ -109,41 +125,37 @@ const ApplicationsPage: FC = () => {
       return application.client_name.toLowerCase().includes(clientName.toLowerCase());
     });
     dispatch(setStartDate(localStartDate));
+    dispatch(setEndDate(localEndDate));
+    dispatch(setClientName(localClientName));
+    dispatch(setStatus(localStatus));
     setApplications(filteredApplications);
     setIsSearchClicked(true);
   };
   
   const latestStartDateFromRedux = useSelector((state: RootState) => state.search.startDate);
+  const latestEndDateFromRedux = useSelector((state: RootState) => state.search.endDate);
+  const latestStatusFromRedux = useSelector((state: RootState) => state.search.status);
+  const latestClientNameFromRedux = useSelector((state: RootState) => state.search.clientName);
   const fetchApplicationsAndSetInterval = async () => {
     try {
       setIsSearchClicked(false);
       
-      custom_params = {
-        start_date: latestStartDateFromRedux,
-        end_date: endDate,
-        status: status,
-      };
-
       const response = await axios.get('http://localhost:8000/applications/', {
         withCredentials: true,
         params: {
-          start_date: localStartDate,
-          end_date: endDate,
-          status: status,
+          start_date: latestStartDateFromRedux,
+          end_date: latestEndDateFromRedux,
+          status: translateStatusReverse(latestStatusFromRedux.toLowerCase()),
         },
       });
       const data = response.data;
 
-
       const filteredApplications = data.filter((data) => {
-        return true
         if (!data.client_name) {
           return false;
         }
-        return data.client_name.toLowerCase().includes(clientName.toLowerCase());
+        return data.client_name.toLowerCase().includes(latestClientNameFromRedux.toLowerCase());
       });
-
-
 
       setApplications(filteredApplications);
     } catch (error) {
@@ -152,6 +164,10 @@ const ApplicationsPage: FC = () => {
   };
 
   useEffect(() => {
+    setLocalStartDate(latestStartDateFromRedux)
+    setLocalEndDate(latestEndDateFromRedux)
+    setLocalStatus(latestStatusFromRedux)
+    setLocalClientName(latestClientNameFromRedux)
     const pollInterval = setInterval(fetchApplicationsAndSetInterval, 1000); // 10 seconds
 
     // Fetch applications initially
@@ -159,7 +175,7 @@ const ApplicationsPage: FC = () => {
 
     // Cleanup interval on component unmount
     return () => clearInterval(pollInterval);
-  }, [endDate, status, isSearchClicked]);
+  }, [isSearchClicked]);
 
   return (
     <div>
@@ -198,16 +214,16 @@ const ApplicationsPage: FC = () => {
               <input
                 type="date"
                 id="endDate"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                value={localEndDate}
+                onChange={(e) => setLocalEndDate(e.target.value)}
               />
 
               <label htmlFor="status">Статус:</label>
               <input
                 type="text"
                 id="price-input"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                value={localStatus}
+                onChange={(e) => setLocalStatus(e.target.value)}
               />
 
               {/* Step 2: Add input field for client name */}
@@ -215,8 +231,8 @@ const ApplicationsPage: FC = () => {
               <input
                 type="text"
                 id="price-input"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
+                value={localClientName}
+                onChange={(e) => setLocalClientName(e.target.value)}
               />
 
               <button
@@ -248,19 +264,19 @@ const ApplicationsPage: FC = () => {
                 {applications.map((application, index) => (
                   <React.Fragment key={application.application_id}>
                     <tr>
-                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.manager?.name || 'Неизвестно'}</td>
-                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.packer?.name || 'Неизвестно'}</td>
-                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.client_name}</td>
-                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>{application.client_phone}</td>
-                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                      <td style={{ border: '1px solid #000000', padding: '8px' }}>{application.manager?.name || 'Неизвестно'}</td>
+                      <td style={{ border: '1px solid #000000', padding: '8px' }}>{application.packer?.name || 'Неизвестно'}</td>
+                      <td style={{ border: '1px solid #000000', padding: '8px' }}>{application.client_name}</td>
+                      <td style={{ border: '1px solid #000000', padding: '8px' }}>{application.client_phone}</td>
+                      <td style={{ border: '1px solid #000000', padding: '8px' }}>
                       {format(new Date(application.receiving_date), 'dd.MM.yyyy HH:mm')}
                     </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    <td style={{ border: '1px solid #000000', padding: '8px' }}>
                     {format(new Date(application.delivery_date), 'dd.MM.yyyy')}
                     </td>
-                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>{translateStatus(application.status)}</td>
+                      <td style={{ border: '1px solid #000000', padding: '8px' }}>{translateStatus(application.status)}</td>
                       {user_role === 'moderator' && (
-                        <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                        <td style={{ border: '1px solid #000000', padding: '8px' }}>
                           {application.status === 'formed' && (
                             <div>
                               <button onClick={() => handleAccept(application.application_id)} className="btn btn-primary">
@@ -271,9 +287,15 @@ const ApplicationsPage: FC = () => {
                               </button>
                             </div>
                           )}
-                          <a href={`/applications/${application.application_id}/`} className="btn btn-primary">
-                            Подробнее
-                          </a>
+                          <a
+                          className="btn btn-primary"
+                          onClick={(e) => {
+                            e.preventDefault(); // Prevent page refresh
+                            navigateTo(`/applications/${application.application_id}/`);
+                          }}
+                        >
+                          Подробнее
+                        </a>
                         </td>
                       )}
                     </tr>

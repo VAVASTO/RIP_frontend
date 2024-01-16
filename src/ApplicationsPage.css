@@ -15,3 +15,31 @@
     border-radius: 5px;
     margin-right: 10px;
   }
+
+  /* Add the following styles to your 'ApplicationsPage.css' file or your main stylesheet */
+
+/* Add the following styles to your 'ApplicationsPage.css' file or your main stylesheet */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  border: 1px solid #000000; /* Set border color to black */
+  padding: 10px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+.table tr:hover {
+  background-color: #e0e0e0; /* Change background color on hover */
+}
+
+.table-divider {
+  background-color: #000000;
+}
