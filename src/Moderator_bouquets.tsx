@@ -30,6 +30,7 @@ const ModeratorBouquetsPage: FC = () => {
   const [bouquets, setBouquets] = useState<Bouquet[]>([]);
   const [searchValue, setSearchValue] = useState(searchParam);
   const [priceValue, setPriceValue] = useState(priceParam);
+  const user_role = useSelector((state: RootState) => state.auth.user_role);
   const [headerMessage, setHeaderMessage] = useState<string>('');
 
   const isUserLoggedIn = document.cookie.includes('session_key');
@@ -38,6 +39,20 @@ const ModeratorBouquetsPage: FC = () => {
   const handleLoginClick = () => {
     navigateTo('/login/');
   };
+
+  const handleBouquetsClick = () => {
+    navigateTo('/bouquets/');
+  };
+
+
+  const handleApplicationstClick = () => {
+    navigateTo('/applications/');
+  };
+
+  const handleModeratorClick = () => {
+    navigateTo('/moderator/bouquets/');
+  };
+
 
   const handleLogoutClick = () => {
     fetchBouquets(searchValue, priceValue);
@@ -103,11 +118,13 @@ const ModeratorBouquetsPage: FC = () => {
 
   return (
     <div>
-      <header>
+       <header>
         <a href="/bouquets">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
-        <h1>Petal Provisions</h1>
+        <span className="text-label with-margin" onClick={handleBouquetsClick}>
+            Все букеты
+          </span>
         {!isUserLoggedIn && (
           <div className="text-and-button">
             <button className="btn btn-primary" onClick={handleLoginClick}>
@@ -115,10 +132,24 @@ const ModeratorBouquetsPage: FC = () => {
             </button>
           </div>
         )}
+
+        {isUserLoggedIn && user_role === 'moderator' && (
+              <span className="text-label with-margin" onClick={handleModeratorClick}>
+                Редактирование букетов
+              </span>
+            )}
         {isUserLoggedIn && (
+          <div>
+            <span className="text-label with-margin" onClick={handleApplicationstClick}>
+              Заявки
+            </span>
+          </div>
+        )}
+
+      {isUserLoggedIn && (
           <div className="text-and-button">
             <p>{username}</p>
-            <LogoutButton onLogout={handleLogoutClick} />
+            <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
           </div>
         )}
       </header>
@@ -140,7 +171,7 @@ const ModeratorBouquetsPage: FC = () => {
               <tbody>
                 {bouquets.map((bouquet) => (
                   <tr key={bouquet.bouquet_id}>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    <td style={{ border: '1px solid #000', padding: '8px' }}>
                       <img
                         src={
                           bouquet.full_url !== '' && bouquet.full_url !== 'http://localhost:9000/images/images/None'
@@ -151,12 +182,12 @@ const ModeratorBouquetsPage: FC = () => {
                         style={{ width: '100px', height: '100px' }}
                       />
                     </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{bouquet.name}</td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{bouquet.price} рублей</td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    <td style={{ border: '1px solid #000', padding: '8px' }}>{bouquet.name}</td>
+                    <td style={{ border: '1px solid #000', padding: '8px' }}>{bouquet.price} рублей</td>
+                    <td style={{ border: '1px solid #000', padding: '8px' }}>
                       {bouquet.status === 'in_stock' ? 'В продаже' : 'Удалён'}
                     </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    <td style={{ border: '1px solid #000', padding: '8px' }}>
                       {bouquet.status === 'in_stock' ? (
                           <button onClick={() => handleDelete(bouquet.bouquet_id)} className="btn btn-primary">
                             Удалить

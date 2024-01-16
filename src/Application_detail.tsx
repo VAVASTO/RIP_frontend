@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';  // Import Axios library
 import Breadcrumbs from './Breadcrumbs';
+import { useSelector, useDispatch } from 'react-redux';
 import './ApplicationsPage.css';
+import { RootState } from './redux/store';
+import LogoutButton from './LogoutButton';
 import './BouquetDetail.css';
 import logoImage from './logo.png';
 
@@ -51,9 +54,13 @@ function translateStatus(status: string): string {
 }
 
 const BouquetDetailPage: React.FC = () => {
+const navigateTo = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [editedQuantities, setEditedQuantities] = useState<{ [key: number]: number }>({});
+  const isUserLoggedIn = document.cookie.includes('session_key');
+  const username = useSelector((state: RootState) => state.auth.username);
+  const user_role = useSelector((state: RootState) => state.auth.user_role);
 
   const [editedClientInfo, setEditedClientInfo] = useState({
     client_name: orderData?.client_name || '',
@@ -61,6 +68,28 @@ const BouquetDetailPage: React.FC = () => {
     client_address: orderData?.client_address || '',
     delivery_date: orderData?.delivery_date || '',
   });
+
+  const handleLoginClick = () => {
+    navigateTo('/login/');
+  };
+
+  const handleBouquetsClick = () => {
+    navigateTo('/bouquets/');
+  };
+
+
+  const handleApplicationstClick = () => {
+    navigateTo('/applications/');
+  };
+
+  const handleModeratorClick = () => {
+    navigateTo('/moderator/bouquets/');
+  };
+
+  const handleLogoutClick = () => {
+    // Call fetchBouquets when LogoutButton is clicked
+    navigateTo('/bouquets/');
+  };
 
   const breadcrumbsItems = [
     { label: 'Все букеты', link: '/bouquets' },
@@ -177,15 +206,44 @@ const BouquetDetailPage: React.FC = () => {
 
   return (
     <div>
-      <header>
+       <header>
         <a href="/bouquets">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
-        <h1>Petal Provisions</h1>
+        <span className="text-label with-margin" onClick={handleBouquetsClick}>
+            Все букеты
+          </span>
+        {!isUserLoggedIn && (
+          <div className="text-and-button">
+            <button className="btn btn-primary" onClick={handleLoginClick}>
+              Войти
+            </button>
+          </div>
+        )}
+
+        {isUserLoggedIn && user_role === 'moderator' && (
+              <span className="text-label with-margin" onClick={handleModeratorClick}>
+                Редактирование букетов
+              </span>
+            )}
+        {isUserLoggedIn && (
+          <div>
+            <span className="text-label with-margin" onClick={handleApplicationstClick}>
+              Заявки
+            </span>
+          </div>
+        )}
+
+      {isUserLoggedIn && (
+          <div className="text-and-button">
+            <p>{username}</p>
+            <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
+          </div>
+        )}
       </header>
+
       <div className="container">
         <div className="row">
-          <Breadcrumbs items={breadcrumbsItems} />
           <div className="col">
             {orderData && (
               <div className="order-details">

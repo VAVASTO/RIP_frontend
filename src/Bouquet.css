@@ -259,3 +259,7 @@
     /* Add any additional styling if required */
   }
   
+  .with-margin {
+    margin-left: 10px; /* или другое значение отступа, которое вы предпочитаете */
+    text-decoration: underline;
+  }

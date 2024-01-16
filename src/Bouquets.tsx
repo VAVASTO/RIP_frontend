@@ -39,6 +39,11 @@ const BouquetsPage: FC = () => {
     navigateTo('/login/');
   };
 
+  const handleBouquetsClick = () => {
+    navigateTo('/bouquets/');
+  };
+
+
   const handleApplicationstClick = () => {
     navigateTo('/applications/');
   };
@@ -107,7 +112,9 @@ const BouquetsPage: FC = () => {
         <a href="/bouquets">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
-        <h1>Petal Provisions</h1>
+        <span className="text-label with-margin" onClick={handleBouquetsClick}>
+            Все букеты
+          </span>
         {!isUserLoggedIn && (
           <div className="text-and-button">
             <button className="btn btn-primary" onClick={handleLoginClick}>
@@ -117,17 +124,20 @@ const BouquetsPage: FC = () => {
         )}
 
         {isUserLoggedIn && user_role === 'moderator' && (
-              <div className="text-and-button">
-                <button className="btn btn-primary" onClick={handleModeratorClick}>
-                  Редактирование букетов
-                </button>
-              </div>
+              <span className="text-label with-margin" onClick={handleModeratorClick}>
+                Редактирование букетов
+              </span>
             )}
         {isUserLoggedIn && (
-          <div className="text-and-button">
-            <button className="btn btn-primary" onClick={handleApplicationstClick}>
+          <div>
+            <span className="text-label with-margin" onClick={handleApplicationstClick}>
               Заявки
-            </button>
+            </span>
+          </div>
+        )}
+
+      {isUserLoggedIn && (
+          <div className="text-and-button">
             <p>{username}</p>
             <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
           </div>
@@ -140,13 +150,17 @@ const BouquetsPage: FC = () => {
             <Breadcrumbs items={breadcrumbsItems} /> {}
             {isUserLoggedIn && (  
           <div className="basket-container">
-          <a href={draftApplicationId !== null ? `/applications/${draftApplicationId}/` : '#'} className="basket-container">
-            <img
-              src={headerMessage === 'null' ? empty_basket : full_basket}
-              alt="Basket Image"
-              className="basket-image"
-            />
-          </a>
+          {isUserLoggedIn && (  
+          <div className="basket-container">
+            <div onClick={() => navigateTo(draftApplicationId !== null ? `/applications/${draftApplicationId}/` : '/')}>
+              <img
+                src={headerMessage === 'null' ? empty_basket : full_basket}
+                alt="Basket Image"
+                className="basket-image"
+              />
+            </div>
+          </div>
+        )}
         </div>)}
         <div className="search-bar">
       <input

@@ -75,6 +75,20 @@ const ApplicationsPage: FC = () => {
     navigateTo('/login/');
   };
 
+  const handleBouquetsClick = () => {
+    navigateTo('/bouquets/');
+  };
+
+
+  const handleApplicationstClick = () => {
+    navigateTo('/applications/');
+  };
+
+  const handleModeratorClick = () => {
+    navigateTo('/moderator/bouquets/');
+  };
+
+
   const handleAccept = async (applicationId: number) => {
     try {
       const response = await axios.put(
@@ -183,7 +197,9 @@ const ApplicationsPage: FC = () => {
         <a href="/bouquets">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
-        <h1>Petal Provisions</h1>
+        <span className="text-label with-margin" onClick={handleBouquetsClick}>
+            Все букеты
+          </span>
         {!isUserLoggedIn && (
           <div className="text-and-button">
             <button className="btn btn-primary" onClick={handleLoginClick}>
@@ -191,16 +207,31 @@ const ApplicationsPage: FC = () => {
             </button>
           </div>
         )}
+
+        {isUserLoggedIn && user_role === 'moderator' && (
+              <span className="text-label with-margin" onClick={handleModeratorClick}>
+                Редактирование букетов
+              </span>
+            )}
         {isUserLoggedIn && (
+          <div>
+            <span className="text-label with-margin" onClick={handleApplicationstClick}>
+              Заявки
+            </span>
+          </div>
+        )}
+
+      {isUserLoggedIn && (
           <div className="text-and-button">
             <p>{username}</p>
-            <LogoutButton onLogout={handleLogoutClick} />
+            <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
           </div>
         )}
       </header>
       <div className="album">
         <div className="container">
-          <div className="row">
+          {user_role === 'moderator' && (
+            <div className="row">
             <div className="date-filters">
               <label htmlFor="startDate">Дата начала:</label>
               <input
@@ -243,8 +274,8 @@ const ApplicationsPage: FC = () => {
               >
                 Искать
               </button>
-            </div>
-          </div>
+              </div>
+            </div>)}
           <div className="row">
             <table className="table" style={{ marginsearchBouquetsReducerTop: '20px' }}>
               <thead>

@@ -3,11 +3,14 @@ import { useDispatch } from 'react-redux';
 import { setAuthToken } from '../redux/authSlice';
 import '../Bouquet.css'; // Предполагается, что это ваш файл CSS
 import axios from 'axios';
-import logoImage from '../logo.png'; 
+import logoImage from '../logo.png';  
 
 const RegistrationPage: React.FC = () => {
   const dispatch = useDispatch();
   const [login, setLogin] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
@@ -42,24 +45,24 @@ const RegistrationPage: React.FC = () => {
             className="rounded-input"
             placeholder="Имя"
             type="text"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <br />
           <input
             className="rounded-input"
             placeholder="Телефон"
             type="text"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
           <br />
           <input
             className="rounded-input"
             placeholder="Email"
             type="text"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <br />
           <input

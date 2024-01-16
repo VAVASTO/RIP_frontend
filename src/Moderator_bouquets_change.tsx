@@ -1,11 +1,41 @@
 // ModeratorBouquetsChangePage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
 import Breadcrumbs from './Breadcrumbs';
 import './Moderator_bouquets_change.css'; // Import the CSS file
 import logoImage from './logo.png';
+import LogoutButton from './LogoutButton';
+import { RootState } from './redux/store';
 
 const ModeratorBouquetsChangePage: React.FC = () => {
+  const navigateTo = useNavigate();
+  const isUserLoggedIn = document.cookie.includes('session_key');
+  const user_role = useSelector((state: RootState) => state.auth.user_role);
+  const username = useSelector((state: RootState) => state.auth.username);
+  const handleLoginClick = () => {
+    navigateTo('/login/');
+  };
+
+  const handleBouquetsClick = () => {
+    navigateTo('/bouquets/');
+  };
+
+
+  const handleApplicationstClick = () => {
+    navigateTo('/applications/');
+  };
+
+  const handleModeratorClick = () => {
+    navigateTo('/moderator/bouquets/');
+  };
+
+  const handleLogoutClick = () => {
+    navigateTo('/bouquets/');
+  };
+
+
   const { id } = useParams<{ id: string }>();
   const [bouquetData, setBouquetData] = useState({
     name: '',
@@ -110,7 +140,36 @@ const ModeratorBouquetsChangePage: React.FC = () => {
         <a href="/bouquets">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
-        <h1>Petal Provisions</h1>
+        <span className="text-label with-margin" onClick={handleBouquetsClick}>
+            Все букеты
+          </span>
+        {!isUserLoggedIn && (
+          <div className="text-and-button">
+            <button className="btn btn-primary" onClick={handleLoginClick}>
+              Войти
+            </button>
+          </div>
+        )}
+
+        {isUserLoggedIn && user_role === 'moderator' && (
+              <span className="text-label with-margin" onClick={handleModeratorClick}>
+                Редактирование букетов
+              </span>
+            )}
+        {isUserLoggedIn && (
+          <div>
+            <span className="text-label with-margin" onClick={handleApplicationstClick}>
+              Заявки
+            </span>
+          </div>
+        )}
+
+      {isUserLoggedIn && (
+          <div className="text-and-button">
+            <p>{username}</p>
+            <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
+          </div>
+        )}
       </header>
       <div className="container">
         <div className="row">
