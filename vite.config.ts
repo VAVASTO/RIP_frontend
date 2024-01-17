@@ -13,5 +13,5 @@ export default defineConfig({
     //},
    },
   plugins: [react()],
-  base:'/RIP_front/',
+  base:'/RIP_frontend/',
 })
