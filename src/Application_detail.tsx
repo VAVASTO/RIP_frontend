@@ -129,7 +129,6 @@ const navigateTo = useNavigate();
     fetchOrderData();
 
     return () => {
-      // Cleanup if needed
     };
   }, [id]);
 
@@ -138,7 +137,6 @@ const navigateTo = useNavigate();
       const newQuantity = editedQuantities[bouquetId];
       console.log('Saved changes. Bouquet ID:', bouquetId, 'New Quantity:', newQuantity);
 
-      // Make a PUT request using Axios
       await axios.put(`http://localhost:8000/applications/${id}/bouquets/${bouquetId}/`, {
         quantity: newQuantity,
       });
@@ -151,7 +149,7 @@ const navigateTo = useNavigate();
   
   const handleSaveChanges = async () => {
     try {
-      // Make a PUT request using Axios
+
       await axios.put(`http://localhost:8000/applications/update_service_application/`, {
         client_name: editedClientInfo.client_name,
         client_phone: editedClientInfo.client_phone,
@@ -159,7 +157,7 @@ const navigateTo = useNavigate();
         delivery_date: editedClientInfo.delivery_date,
       });
 
-      // Optionally, you can refetch the order data to update the displayed information
+
       fetchOrderData();
     } catch (error) {
       console.error('Error updating client information:', error);
@@ -168,12 +166,12 @@ const navigateTo = useNavigate();
 
   const handleConfirmOrder = async () => {
     try {
-        // Make a PUT request using Axios
+ 
         await axios.put(`http://localhost:8000/applications/${id}/change_status_manager/`, {
             application_status: "formed",
         });
   
-        // Optionally, you can refetch the order data to update the displayed information
+
         fetchOrderData();
       } catch (error) {
         console.error('Error updating client information:', error);
@@ -182,12 +180,11 @@ const navigateTo = useNavigate();
 
     const handleDeleteOrder = async () => {
         try {
-            // Make a PUT request using Axios
+
             await axios.put(`http://localhost:8000/applications/${id}/change_status_manager/`, {
                 application_status: "deleted",
             });
-      
-            // Optionally, you can refetch the order data to update the displayed information
+
             fetchOrderData();
           } catch (error) {
             console.error('Error updating client information:', error);
@@ -197,7 +194,6 @@ const navigateTo = useNavigate();
   const handleDeleteBouquet = async (bouquetId: number) => {
     try {
       await axios.delete(`http://localhost:8000/applications/${id}/bouquets_delete/${bouquetId}/`);
-      // Fetch updated order data after successful deletion
       fetchOrderData()
     } catch (error) {
       console.error('Error deleting bouquet:', error);
@@ -237,7 +233,7 @@ const navigateTo = useNavigate();
       {isUserLoggedIn && (
           <div className="text-and-button">
             <p>{username}</p>
-            <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}
+            <LogoutButton onLogout={handleLogoutClick} /> {}
           </div>
         )}
       </header>
@@ -311,7 +307,7 @@ const navigateTo = useNavigate();
                       <label>
                         Дата доставки:
                         <input
-                          type="date" // Change to "date" if you want a date picker
+                          type="date"
                           value={editedClientInfo.delivery_date}
                           onChange={(e) => setEditedClientInfo({ ...editedClientInfo, delivery_date: e.target.value })}
                         />
