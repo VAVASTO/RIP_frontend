@@ -36,7 +36,6 @@ const mockBouquets: Bouquet[] = [
     price: '8000',
     full_url: image_3,
   },
-  // Add more mock bouquets as needed
 ];
 
 const BouquetsPage: FC = () => {
@@ -51,7 +50,6 @@ const BouquetsPage: FC = () => {
   const [priceValue, setPriceValue] = useState(priceParam);
 
   const fetchBouquets = (searchText: string, price: string) => {
-    // Use mock data instead of fetching from the API
     const filteredBouquets = mockBouquets.filter(bouquet =>
       bouquet.name.toLowerCase().includes(searchText.toLowerCase()) &&
       bouquet.price.includes(price)
@@ -59,26 +57,23 @@ const BouquetsPage: FC = () => {
     setBouquets(filteredBouquets);
   };
   const breadcrumbsItems = [
-    { label: 'Все букеты', link:'' } // Link to the current page
+    { label: 'Все букеты', link:'' }
   ];
 
   const handleSearchClick = () => {
-    // Redirect to the same frontend page with the search query parameter
     navigateTo(`/bouquetss/?q=${searchValue}&price=${priceValue}`);
-    // Fetch data after navigating to the new URL
     fetchBouquets(searchValue, priceValue);
   };
 
   useEffect(() => {
-    // Fetch data when the component mounts for the first time or when search query changes
     fetchBouquets(searchValue, priceValue);
-  }, []); // Update the effect to run whenever searchValue changes
+  }, []); 
 
   return (
     <div className="album">
       <div className="container">
         <div className="row">
-        <Breadcrumbs items={breadcrumbsItems} /> {/* Include Breadcrumbs component */}
+        <Breadcrumbs items={breadcrumbsItems} /> {}
             <div className="search-bar">
               <input
                 type="text"
@@ -107,8 +102,14 @@ const BouquetsPage: FC = () => {
                   <h5 className="card-title">{bouquet.name}</h5>
                   <p className="card-text">{bouquet.description}</p>
                   <p className="card-text">Цена: {bouquet.price} рублей</p>
-                  {/* Add more text elements here if needed */}
-                  <a href={`/RIP_front/#/bouquetss/${bouquet.bouquet_id}/`} className="btn btn-primary">
+                  {}
+                  <a
+                      className="btn btn-primary"
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent page refresh
+                        navigateTo(`/bouquetss/${bouquet.bouquet_id}/`);
+                      }}
+                    >
                     Подробнее
                   </a>
                 </div>
